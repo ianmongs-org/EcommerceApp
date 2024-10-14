@@ -105,7 +105,7 @@ EcommerceApp/
    - **Update Cart**: Users can update item quantities or remove products.
    - **View Cart**: A detailed summary of the cart including product names, prices, and total amount.
 
-### 5. **Payment Integration**
+### 5. **Payment Integration**(not done)
    - **Payment Gateway**: Payments are securely processed through Stripe or PayPal integration.
    - **Order Confirmation**: Upon successful payment, an order confirmation email is sent to the user.
    
