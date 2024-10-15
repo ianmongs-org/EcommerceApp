@@ -27,12 +27,22 @@ public class CategoryController {
         return new ResponseEntity<>(categoryService.getAllCategories(), HttpStatus.OK);
     }
 
-    @PutMapping("/add")
+    @PostMapping("/add")
     public ResponseEntity<Category> addCategory(@RequestBody Category category){
         try {
             return new ResponseEntity<>(categoryService.addCategory(category), HttpStatus.CREATED);
         } catch (CategoryExistsException e) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
+    }
+
+    @PutMapping("/update/{categoryId}")
+    public ResponseEntity<Category> updateCategory(@PathVariable Long categoryId, @RequestBody Category category){
+        return new ResponseEntity<>(categoryService.updateCategory(categoryId, category), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{categoryId}")
+    public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId){
+        return new ResponseEntity<>(categoryService.deleteCategory(categoryId), HttpStatus.OK);
     }
 }
