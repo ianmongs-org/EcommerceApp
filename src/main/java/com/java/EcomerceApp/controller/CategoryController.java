@@ -1,5 +1,6 @@
 package com.java.EcomerceApp.controller;
 
+import com.java.EcomerceApp.exception.CategoryExistsException;
 import com.java.EcomerceApp.model.Category;
 import com.java.EcomerceApp.service.category.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,12 @@ import java.util.List;
 @RequestMapping("/api/categories")
 public class CategoryController {
 
+    private final CategoryService categoryService;
+
     @Autowired
-    CategoryService categoryService;
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping("/all")
     public ResponseEntity<List<Category>> getAllCategories(){
@@ -24,6 +29,10 @@ public class CategoryController {
 
     @PutMapping("/add")
     public ResponseEntity<Category> addCategory(@RequestBody Category category){
-        return new ResponseEntity<>(categoryService.addCategory(category), HttpStatus.CREATED);
+        try {
+            return new ResponseEntity<>(categoryService.addCategory(category), HttpStatus.CREATED);
+        } catch (CategoryExistsException e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
     }
 }

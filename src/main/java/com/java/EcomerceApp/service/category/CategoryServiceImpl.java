@@ -1,5 +1,7 @@
 package com.java.EcomerceApp.service.category;
 
+import com.java.EcomerceApp.exception.CategoryExistsException;
+import com.java.EcomerceApp.exception.CategoryNotFoundException;
 import com.java.EcomerceApp.model.Category;
 import com.java.EcomerceApp.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +21,18 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category addCategory(Category category) {
-        categoryRepository.findByName(category.getName()).ifPresent(c -> {
-            throw new IllegalStateException("Category already exists");
+        categoryRepository.findByName(category.getName()).ifPresent(existingCategory -> {
+            throw new CategoryExistsException("category already exists");
         });
         return categoryRepository.save(category);
+    }
+
+    @Override
+    public String deleteCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+        categoryRepository.delete(category);
+        return "Category deleted successfully";
     }
 
 }
