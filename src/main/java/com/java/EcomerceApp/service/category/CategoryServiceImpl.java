@@ -17,4 +17,12 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findAll();
     }
 
+    @Override
+    public Category addCategory(Category category) {
+        categoryRepository.findByName(category.getName()).ifPresent(c -> {
+            throw new IllegalStateException("Category already exists");
+        });
+        return categoryRepository.save(category);
+    }
+
 }
