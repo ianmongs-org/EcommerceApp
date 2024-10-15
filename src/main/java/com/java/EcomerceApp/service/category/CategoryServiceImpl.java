@@ -1,6 +1,6 @@
 package com.java.EcomerceApp.service.category;
 
-import com.java.EcomerceApp.exception.CategoryExistsException;
+import com.java.EcomerceApp.exception.APIException;
 import com.java.EcomerceApp.exception.CategoryNotFoundException;
 import com.java.EcomerceApp.model.Category;
 import com.java.EcomerceApp.repository.CategoryRepository;
@@ -16,13 +16,17 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+        List<Category> categories = categoryRepository.findAll();
+        if (categories.isEmpty()) {
+            throw new APIException("No categories found");
+        }
+        return categories;
     }
 
     @Override
     public Category addCategory(Category category) {
         categoryRepository.findByName(category.getName()).ifPresent(existingCategory -> {
-            throw new CategoryExistsException("category already exists");
+            throw new APIException("category with name " + category.getName() +" already exists");
         });
         return categoryRepository.save(category);
     }

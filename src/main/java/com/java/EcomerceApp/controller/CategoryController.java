@@ -1,8 +1,9 @@
 package com.java.EcomerceApp.controller;
 
-import com.java.EcomerceApp.exception.CategoryExistsException;
+import com.java.EcomerceApp.exception.APIException;
 import com.java.EcomerceApp.model.Category;
 import com.java.EcomerceApp.service.category.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +29,10 @@ public class CategoryController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Category> addCategory(@RequestBody Category category){
+    public ResponseEntity<Category> addCategory(@Valid @RequestBody Category category){
         try {
             return new ResponseEntity<>(categoryService.addCategory(category), HttpStatus.CREATED);
-        } catch (CategoryExistsException e) {
+        } catch (APIException e) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
