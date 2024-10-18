@@ -1,5 +1,6 @@
 package com.java.EcomerceApp.controller;
 
+import com.java.EcomerceApp.dto.CategoryResponse;
 import com.java.EcomerceApp.exception.APIException;
 import com.java.EcomerceApp.model.Category;
 import com.java.EcomerceApp.service.category.CategoryService;
@@ -23,8 +24,7 @@ public class CategoryController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Category>> getAllCategories(){
-
+    public ResponseEntity<CategoryResponse> getAllCategories(){
         return new ResponseEntity<>(categoryService.getAllCategories(), HttpStatus.OK);
     }
 
