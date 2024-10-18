@@ -1,5 +1,6 @@
 package com.java.EcomerceApp.controller;
 
+import com.java.EcomerceApp.dto.CategoryDTO;
 import com.java.EcomerceApp.dto.CategoryResponse;
 import com.java.EcomerceApp.exception.APIException;
 import com.java.EcomerceApp.model.Category;
@@ -29,8 +30,8 @@ public class CategoryController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Category> addCategory(@Valid @RequestBody Category category){
-        return new ResponseEntity<>(categoryService.addCategory(category), HttpStatus.CREATED);
+    public ResponseEntity<CategoryDTO> addCategory(@Valid @RequestBody CategoryDTO categoryDTO){
+        return new ResponseEntity<>(categoryService.addCategory(categoryDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{categoryId}")
