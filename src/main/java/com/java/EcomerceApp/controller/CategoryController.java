@@ -30,11 +30,7 @@ public class CategoryController {
 
     @PostMapping("/add")
     public ResponseEntity<Category> addCategory(@Valid @RequestBody Category category){
-        try {
-            return new ResponseEntity<>(categoryService.addCategory(category), HttpStatus.CREATED);
-        } catch (APIException e) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
+        return new ResponseEntity<>(categoryService.addCategory(category), HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{categoryId}")
