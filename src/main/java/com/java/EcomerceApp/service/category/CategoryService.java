@@ -5,7 +5,7 @@ import com.java.EcomerceApp.dto.CategoryResponse;
 
 
 public interface CategoryService {
-     CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize);
+     CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
      CategoryDTO addCategory(CategoryDTO categoryDTO);
      CategoryDTO updateCategory(Long categoryId, CategoryDTO updatedCategory);
      String deleteCategory(Long categoryId);
