@@ -8,6 +8,9 @@ import com.java.EcomerceApp.model.Category;
 import com.java.EcomerceApp.repository.CategoryRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +24,12 @@ public class CategoryServiceImpl implements CategoryService {
     private ModelMapper modelMapper;
 
     @Override
-    public CategoryResponse getAllCategories() {
-        List<Category> categories = categoryRepository.findAll();
+    public CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize) {
+        //represents the request of the specific page
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page <Category> categoryPage = categoryRepository.findAll(pageable);
+
+        List<Category> categories = categoryPage.getContent();
         if (categories.isEmpty()) {
             throw new APIException("No categories found");
         }

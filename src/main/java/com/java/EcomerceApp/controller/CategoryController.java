@@ -25,8 +25,9 @@ public class CategoryController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<CategoryResponse> getAllCategories(){
-        return new ResponseEntity<>(categoryService.getAllCategories(), HttpStatus.OK);
+    public ResponseEntity<CategoryResponse> getAllCategories(@RequestParam(name = "pageNumber", defaultValue = "0") Integer pageNumber,
+                                                             @RequestParam(name ="pageSize",defaultValue = "10") Integer pageSize){
+        return new ResponseEntity<>(categoryService.getAllCategories(pageNumber, pageSize), HttpStatus.OK);
     }
 
     @PostMapping("/add")
