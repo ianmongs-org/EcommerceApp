@@ -57,10 +57,12 @@ public class CategoryServiceImpl implements CategoryService {
         return "Category deleted successfully";
     }
     @Override
-    public Category updateCategory(Long categoryId, Category category) {
+    public CategoryDTO updateCategory(Long categoryId, CategoryDTO categoryDTO) {
         Category existingCategory = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryNotFoundException(categoryId));
-        existingCategory.setName(category.getName());
-        return categoryRepository.save(existingCategory);
+        existingCategory.setName(categoryDTO.getCategoryName());
+
+        Category updatedCategory = categoryRepository.save(existingCategory);
+        return modelMapper.map(updatedCategory, CategoryDTO.class);
     }
 }
