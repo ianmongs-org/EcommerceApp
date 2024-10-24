@@ -103,4 +103,16 @@ public class ProductServiceImpl implements ProductService {
         // Return the updated product as a ProductDTO
         return modelMapper.map(savedProduct, ProductDTO.class);
     }
+
+    @Override
+    public String deleteProduct(Long productId) {
+        // Find the product by id
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + productId));
+
+        // Delete the product
+        productRepository.delete(product);
+
+        return "Product deleted successfully";
+    }
 }
