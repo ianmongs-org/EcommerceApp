@@ -61,10 +61,26 @@ public class ProductServiceImpl implements ProductService {
 
         //List of products from db
         List<Product> products = productRepository.findByCategoryOrderByPriceAsc(category);
+        //check if list is empty
+        if(products.isEmpty()){
+            throw new ResourceNotFoundException("product list is empty");
+        }
         //map the products to productDTO
         List<ProductDTO> productDTOS = products.stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .toList();
+        return new ProductResponse(productDTOS);
+    }
+
+    @Override
+    public ProductResponse getProductsByKeyword(String keyword) {
+        List<Product> products = productRepository.findByProductNameLikeIgnoreCase("%" + keyword + "%");
+        if (products.isEmpty()) {
+            throw new ResourceNotFoundException("No products found for the keyword: " + keyword);
+        }
+        List<ProductDTO> productDTOS = products.stream()
+                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .collect(Collectors.toList());
         return new ProductResponse(productDTOS);
     }
 }
