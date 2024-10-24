@@ -17,7 +17,7 @@ public class Product {
     private Long productId;
 
     @NotBlank(message = "Product name is required")
-    @Size(max = 100, message = "Product name cannot exceed 100 characters")
+    @Size(min =3, max = 100, message = "Product name should be between 3 - 100 characters")
     private String productName;
 
     @NotBlank(message = "Product description is required")
