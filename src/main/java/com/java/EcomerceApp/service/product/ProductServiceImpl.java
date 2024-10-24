@@ -2,7 +2,6 @@ package com.java.EcomerceApp.service.product;
 
 import com.java.EcomerceApp.dto.ProductDTO;
 import com.java.EcomerceApp.dto.ProductResponse;
-import com.java.EcomerceApp.exception.CategoryNotFoundException;
 import com.java.EcomerceApp.exception.ResourceNotFoundException;
 import com.java.EcomerceApp.model.Category;
 import com.java.EcomerceApp.model.Product;
@@ -82,5 +81,26 @@ public class ProductServiceImpl implements ProductService {
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .collect(Collectors.toList());
         return new ProductResponse(productDTOS);
+    }
+
+    @Override
+    public ProductDTO updateProduct(Long productId, Product updateProduct) {
+        // Find the product by id
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + productId));
+
+        // Update the product details
+        product.setProductName(updateProduct.getProductName());
+        product.setProductDescription(updateProduct.getProductDescription());
+        product.setPrice(updateProduct.getPrice());
+        product.setQuantity(updateProduct.getQuantity());
+        product.setDiscount(updateProduct.getDiscount());
+        Double specialPrice = product.getPrice() - (product.getPrice() * product.getDiscount() * 0.01);
+        product.setSpecialPrice(specialPrice);
+        // Save the updated product
+        Product savedProduct = productRepository.save(product);
+
+        // Return the updated product as a ProductDTO
+        return modelMapper.map(savedProduct, ProductDTO.class);
     }
 }
