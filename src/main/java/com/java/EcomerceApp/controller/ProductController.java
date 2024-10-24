@@ -23,11 +23,16 @@ public class ProductController {
     }
     @GetMapping("/all")
     public ResponseEntity<ProductResponse> getAllProducts() {
-        return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
+        return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.FOUND);
     }
 
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<ProductResponse> getProductsByCategory(@PathVariable Long categoryId) {
-        return new ResponseEntity<>(productService.getProductsByCategory(categoryId), HttpStatus.OK);
+        return new ResponseEntity<>(productService.getProductsByCategory(categoryId), HttpStatus.FOUND);
+    }
+
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<ProductResponse> getProductsByKeyword(@PathVariable String keyword) {
+        return new ResponseEntity<>(productService.getProductsByKeyword(keyword), HttpStatus.FOUND);
     }
 }
