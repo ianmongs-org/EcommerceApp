@@ -84,23 +84,23 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO updateProduct(Long productId, Product updateProduct) {
-        // Find the product by id
-        Product product = productRepository.findById(productId)
+    public ProductDTO updateProduct(Long productId, ProductDTO updateProduct) {
+        // Find the productFromDb by id
+        Product productFromDb = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + productId));
-
-        // Update the product details
-        product.setProductName(updateProduct.getProductName());
-        product.setProductDescription(updateProduct.getProductDescription());
-        product.setPrice(updateProduct.getPrice());
-        product.setQuantity(updateProduct.getQuantity());
-        product.setDiscount(updateProduct.getDiscount());
+        Product product = modelMapper.map(updateProduct, Product.class);
+        // Update the productFromDb details
+        productFromDb.setProductName(updateProduct.getProductName());
+        productFromDb.setProductDescription(updateProduct.getProductDescription());
+        productFromDb.setPrice(updateProduct.getPrice());
+        productFromDb.setQuantity(updateProduct.getQuantity());
+        productFromDb.setDiscount(updateProduct.getDiscount());
         Double specialPrice = product.getPrice() - (product.getPrice() * product.getDiscount() * 0.01);
-        product.setSpecialPrice(specialPrice);
-        // Save the updated product
-        Product savedProduct = productRepository.save(product);
+        productFromDb.setSpecialPrice(specialPrice);
+        // Save the updated productFromDb
+        Product savedProduct = productRepository.save(productFromDb);
 
-        // Return the updated product as a ProductDTO
+        // Return the updated productFromDb as a ProductDTO
         return modelMapper.map(savedProduct, ProductDTO.class);
     }
 
