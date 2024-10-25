@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/products")
@@ -46,5 +49,10 @@ public class ProductController {
     public ResponseEntity<String> deleteProduct(@PathVariable Long productId) {
         String result = productService.deleteProduct(productId);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PutMapping("/admin/product/{productId}/image")
+    public ResponseEntity<ProductDTO> updateProductImage(@PathVariable Long productId, @RequestParam("file") MultipartFile file) throws IOException {
+        return new ResponseEntity<>(productService.updateProductImage(productId, file), HttpStatus.OK);
     }
 }
