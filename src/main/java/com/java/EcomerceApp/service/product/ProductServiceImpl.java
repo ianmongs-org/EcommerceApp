@@ -10,6 +10,7 @@ import com.java.EcomerceApp.repository.ProductRepository;
 import com.java.EcomerceApp.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +26,8 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
     private final FileService fileService;
+    @Value("${project.image}")
+    private static String path;
 
     @Override
     public ProductDTO addProduct(ProductDTO productDTO, Long categoryId) {
@@ -127,8 +130,6 @@ public class ProductServiceImpl implements ProductService {
         Product productFromDb = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + productId));
 
-        //dir where images will be stored
-        String path = "/images";
         //get file name of the image
         String fileName  = fileService.uploadImage(path, image);
         //update the file to the product
