@@ -1,5 +1,6 @@
 package com.java.EcomerceApp.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,6 +13,8 @@ import java.util.UUID;
 
 @Service
 public class FileServiceImpl implements FileService{
+    @Value("${project.image}")
+    private String imageUploadDir;
 
     public String uploadImage(String path, MultipartFile file) throws IOException {
         if (file == null || file.isEmpty()) {
@@ -31,8 +34,7 @@ public class FileServiceImpl implements FileService{
 
         // Define the relative path within the project
         String projectDirectory = System.getProperty("user.dir"); // Base directory of the project
-        String imagesDir = projectDirectory + "/src/main/resources/static/images";
-        File directory = new File(imagesDir);
+        File directory = new File(imageUploadDir);
 
         // Create the directory if it doesn't exist
         if (!directory.exists()) {
@@ -40,7 +42,7 @@ public class FileServiceImpl implements FileService{
         }
 
         // Create the full file path
-        String filePath = imagesDir + File.separator + fileName;
+        String filePath = imageUploadDir + File.separator + fileName;
 
         // Copy the file to the target location
         Files.copy(file.getInputStream(), Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
