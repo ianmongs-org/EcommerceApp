@@ -27,7 +27,7 @@ public class ProductServiceImpl implements ProductService {
     private final ModelMapper modelMapper;
     private final FileService fileService;
     @Value("${project.image}")
-    private static String path;
+    private String path;
 
     @Override
     public ProductDTO addProduct(ProductDTO productDTO, Long categoryId) {
@@ -54,6 +54,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse getAllProducts() {
         List<Product> products = productRepository.findAll();
+        //check if list is empty
+        if(products.isEmpty()){
+            throw new ResourceNotFoundException("product list is empty");
+        }
         List<ProductDTO> productDTOS = products.stream()
                 .map(product -> modelMapper.map(product, ProductDTO.class))
                 .collect(Collectors.toList());
