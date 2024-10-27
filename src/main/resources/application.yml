@@ -17,14 +17,18 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
+  servlet:
+    multipart:
+      max-file-size: 1MB
+      max-request-size: 10MB
+      enabled: true
 logging:
   level:
     root: INFO
     org.springframework.web: DEBUG
 # Custom application properties
 project:
-  image: images
+  image: images/
 app:
   name: E-commerce Application
   version: 1.0.0
