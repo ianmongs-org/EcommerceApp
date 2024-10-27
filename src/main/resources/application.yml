@@ -23,6 +23,8 @@ logging:
     root: INFO
     org.springframework.web: DEBUG
 # Custom application properties
+project:
+  image: images
 app:
   name: E-commerce Application
   version: 1.0.0
