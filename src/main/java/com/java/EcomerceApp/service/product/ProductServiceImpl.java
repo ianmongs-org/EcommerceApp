@@ -101,6 +101,10 @@ public class ProductServiceImpl implements ProductService {
         Product productFromDb = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + productId));
         Product product = modelMapper.map(updateProduct, Product.class);
+        //check if a product with the same name exists
+        if (productRepository.existsByProductName(updateProduct.getProductName())) {
+            throw new ResourceNotFoundException("Product with name: " + updateProduct.getProductName() + " already exists");
+        }
         // Update the productFromDb details
         productFromDb.setProductName(updateProduct.getProductName());
         productFromDb.setProductDescription(updateProduct.getProductDescription());
