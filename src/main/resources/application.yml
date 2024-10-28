@@ -22,7 +22,8 @@ spring:
       max-file-size: 1MB
       max-request-size: 10MB
       enabled: true
-logging:
+
+  logging:
   level:
     root: INFO
     org.springframework.web: DEBUG
@@ -30,5 +31,7 @@ logging:
 project:
   image: images/
 app:
+  jwtSecret: mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm
+  jwtExpirationMs: 3000000
   name: E-commerce Application
   version: 1.0.0
