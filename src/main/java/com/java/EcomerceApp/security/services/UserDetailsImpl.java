@@ -2,9 +2,7 @@ package com.java.EcomerceApp.security.services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.java.EcomerceApp.model.User;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +13,8 @@ import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class UserDetailsImpl implements UserDetails {
 
     private static final Long serialVersionUID = 1L;
