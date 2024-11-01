@@ -14,17 +14,22 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@Component
+@Service
 public class AuthTokenFilter extends OncePerRequestFilter {
-    @Autowired
     private JwtUtils jwtUtils;
-
-    @Autowired
     private UserDetailsService userDetailsService;
+
+    public AuthTokenFilter(JwtUtils jwtUtils, UserDetailsService userDetailsService) {
+        this.jwtUtils = jwtUtils;
+        this.userDetailsService = userDetailsService;
+    }
+    public AuthTokenFilter() {
+    }
 
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
