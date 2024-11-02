@@ -1,37 +1,38 @@
-server:
-  port: 8080
+  server:
+    port: 8080
 
-spring:
-  datasource:
-    url: jdbc:h2:mem:ecommerce_db;DB_CLOSE_DELAY=-1
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
+  spring:
+    datasource:
+      url: jdbc:h2:mem:ecommerce_db;DB_CLOSE_DELAY=-1
+      driver-class-name: org.h2.Driver
+      username: sa
+      password:
+    h2:
+      console:
+        enabled: true
+    jpa:
       hibernate:
-        format_sql: true
-  servlet:
-    multipart:
-      max-file-size: 1MB
-      max-request-size: 10MB
-      enabled: true
+        ddl-auto: update
+      show-sql: true
+      properties:
+        hibernate:
+          format_sql: true
+    servlet:
+      multipart:
+        max-file-size: 1MB
+        max-request-size: 10MB
+        enabled: true
 
-  logging:
-  level:
-    root: INFO
-    org.springframework.web: DEBUG
-# Custom application properties
-project:
-  image: images/
-app:
-  jwtSecret: mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm
-  jwtExpirationMs: 3000000
-  name: E-commerce Application
-  version: 1.0.0
+    logging:
+    level:
+      root: INFO
+      org.springframework.web: DEBUG
+    app:
+      jwtSecret: 4f4e6f6e204669727374204a61766120536563726574
+      jwtExpirationMs: 3000000
+      name: E-commerce Application
+      version: 1.0.0
+  # Custom application properties
+  project:
+    image: images/
+
