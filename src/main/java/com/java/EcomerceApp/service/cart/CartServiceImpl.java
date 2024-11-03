@@ -1,6 +1,7 @@
 package com.java.EcomerceApp.service.cart;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.modelmapper.ModelMapper;
@@ -39,14 +40,14 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartDTO addProductToCart(Long productId, Integer quantity) {
-        //retrieve the product
+        // Retrieve the product
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-        //product availability/quantity
+        // Check product availability/quantity
         if (product.getQuantity() < quantity) {
             throw new ResourceNotFoundException("Product not available in the required quantity");
         }
-        //retrieve or create the cart if it does not exist
+        // Retrieve or create the cart if it does not exist
         Cart cart = createCart();
         CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cart.getCartId(), product.getProductId());
         if (cartItem != null) {
@@ -64,26 +65,27 @@ public class CartServiceImpl implements CartService {
         newCartItem.setProduct(product);
         newCartItem.setQuantity(quantity);
         newCartItem.setDiscount(product.getDiscount());
-        newCartItem.setProductPrice(product.getPrice());
+        newCartItem.setProductPrice(product.getSpecialPrice());
 
         cartItemRepository.save(newCartItem);
 
-        product.setQuantity(product.getQuantity());
-        cart.setTotalPrice(cart.getTotalPrice() + (product.getPrice() * quantity));
+        product.setQuantity(product.getQuantity()); // Update product quantity
+        cart.getCartItems().add(newCartItem);
+        cart.setTotalPrice(cart.getTotalPrice() + (product.getSpecialPrice() * quantity));
         cartRepository.save(cart);
 
         CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
         List<CartItem> cartItems = cart.getCartItems();
 
-        Stream<ProductDTO> productDTOStream = cartItems.stream().map(item -> {
-            ProductDTO productDTO = modelMapper.map(newCartItem.getProduct(), ProductDTO.class);
-            productDTO.setQuantity(newCartItem.getQuantity());
-            productDTO.setDiscount(newCartItem.getDiscount());
-            productDTO.setPrice(newCartItem.getProductPrice());
+        List<ProductDTO> productDTOList = cartItems.stream().map(item -> {
+            ProductDTO productDTO = modelMapper.map(item.getProduct(), ProductDTO.class);
+            productDTO.setQuantity(item.getQuantity());
+            productDTO.setDiscount(item.getDiscount());
+            productDTO.setPrice(item.getProductPrice());
             return productDTO;
-        });
+        }).collect(Collectors.toList());
 
-        cartDTO.setProducts(productDTOStream.toList());
+        cartDTO.setProducts(productDTOList);
         return cartDTO;
     }
 
@@ -96,5 +98,24 @@ public class CartServiceImpl implements CartService {
         cart.setUser(authUtil.loggedInUser());
         cart.setTotalPrice(0.0);
         return cartRepository.save(cart);
+    }
+
+    @Override
+    public CartDTO getCart() {
+        Cart cart = cartRepository.findCartByUserEmail(authUtil.loggedInUserEmail());
+        if (cart == null) {
+            throw new ResourceNotFoundException("Cart is empty");
+        }
+        CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
+        List<CartItem> cartItems = cart.getCartItems();
+        List<ProductDTO> productDTOList = cartItems.stream().map(item -> {
+            ProductDTO productDTO = modelMapper.map(item.getProduct(), ProductDTO.class);
+            productDTO.setQuantity(item.getQuantity());
+            productDTO.setDiscount(item.getDiscount());
+            productDTO.setPrice(item.getProductPrice());
+            return productDTO;
+        }).collect(Collectors.toList());
+        cartDTO.setProducts(productDTOList);
+        return cartDTO;
     }
 }
