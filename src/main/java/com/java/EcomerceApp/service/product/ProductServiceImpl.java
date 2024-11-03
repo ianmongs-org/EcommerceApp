@@ -1,14 +1,9 @@
 package com.java.EcomerceApp.service.product;
 
-import com.java.EcomerceApp.dto.ProductDTO;
-import com.java.EcomerceApp.dto.ProductResponse;
-import com.java.EcomerceApp.exception.ResourceNotFoundException;
-import com.java.EcomerceApp.model.Category;
-import com.java.EcomerceApp.model.Product;
-import com.java.EcomerceApp.repository.CategoryRepository;
-import com.java.EcomerceApp.repository.ProductRepository;
-import com.java.EcomerceApp.service.FileService;
-import lombok.RequiredArgsConstructor;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -18,21 +13,30 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import com.java.EcomerceApp.dto.ProductDTO;
+import com.java.EcomerceApp.dto.ProductResponse;
+import com.java.EcomerceApp.exception.ResourceNotFoundException;
+import com.java.EcomerceApp.model.Category;
+import com.java.EcomerceApp.model.Product;
+import com.java.EcomerceApp.repository.CategoryRepository;
+import com.java.EcomerceApp.repository.ProductRepository;
+import com.java.EcomerceApp.service.FileService;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 
 public class ProductServiceImpl implements ProductService {
+
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
     private final FileService fileService;
     @Value("${project.image}")
     private String path;
+    @Value("${servelet.multipart.max-file-size}")
+    private String maxFileSize;
 
     @Override
     public ProductDTO addProduct(ProductDTO productDTO, Long categoryId) {
@@ -65,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         Page<Product> productPage = productRepository.findAll(pageable);
         //check if list is empty
-        if(productPage.getContent().isEmpty()){
+        if (productPage.getContent().isEmpty()) {
             throw new ResourceNotFoundException("product list is empty");
         }
         List<ProductDTO> productDTOS = productPage.stream()
@@ -86,9 +90,9 @@ public class ProductServiceImpl implements ProductService {
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         Page<Product> productPage = productRepository.findByCategoryOrderByPriceAsc(category, pageable);
-        List<Product> products  = productPage.getContent();
+        List<Product> products = productPage.getContent();
         //check if list is empty
-        if(products.isEmpty()){
+        if (products.isEmpty()) {
             throw new ResourceNotFoundException("product list is empty");
         }
         //map the products to productDTO
@@ -160,8 +164,11 @@ public class ProductServiceImpl implements ProductService {
         Product productFromDb = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + productId));
 
+        if (image.getSize() > Long.parseLong(maxFileSize)) {
+            throw new ResourceNotFoundException("File size exceeds the limit of " + maxFileSize);
+        }
         //get file name of the image
-        String fileName  = fileService.uploadImage(path, image);
+        String fileName = fileService.uploadImage(path, image);
         //update the file to the product
         productFromDb.setImage(fileName);
 
