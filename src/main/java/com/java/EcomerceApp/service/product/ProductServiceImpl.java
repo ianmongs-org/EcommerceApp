@@ -165,7 +165,7 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + productId));
 
         if (image.getSize() > Long.parseLong(maxFileSize)) {
-            throw new ResourceNotFoundException("File size exceeds the limit of " + maxFileSize);
+            throw new IllegalArgumentException("File size exceeds the limit of " + maxFileSize);
         }
         //get file name of the image
         String fileName = fileService.uploadImage(path, image);
