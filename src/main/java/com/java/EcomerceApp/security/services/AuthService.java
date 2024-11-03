@@ -1,5 +1,17 @@
 package com.java.EcomerceApp.security.services;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.java.EcomerceApp.dto.LoginRequest;
 import com.java.EcomerceApp.dto.SignupRequest;
 import com.java.EcomerceApp.dto.UserInfoResponse;
@@ -9,21 +21,10 @@ import com.java.EcomerceApp.model.User;
 import com.java.EcomerceApp.repository.RoleRepository;
 import com.java.EcomerceApp.repository.UserRepository;
 import com.java.EcomerceApp.security.utils.JwtUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
+
     @Autowired
     private JwtUtils jwtUtils;
     @Autowired
@@ -37,18 +38,17 @@ public class AuthService {
     @Autowired
     private RoleRepository roleRepository;
 
-
-    public UserInfoResponse authenticateUser(LoginRequest loginRequest){
+    public UserInfoResponse authenticateUser(LoginRequest loginRequest) {
         Authentication authentication;
-            authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+        authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         String jwt = jwtUtils.generateTokenFromUsername(userDetails);
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority()).toList();
-        return new UserInfoResponse(userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles);
+        return new UserInfoResponse(userDetails.getId(), jwt, userDetails.getUsername(), roles);
     }
 
     public String registerUser(SignupRequest signUpRequest) {
@@ -75,20 +75,21 @@ public class AuthService {
         } else {
             strRoles.forEach(role -> {
                 switch (role) {
-                    case "admin":
+                    case "admin" -> {
                         Role adminRole = roleRepository.findByAppRole(AppRole.ADMIN)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(adminRole);
-                        break;
-                    case "seller":
+                    }
+                    case "seller" -> {
                         Role modRole = roleRepository.findByAppRole(AppRole.SELLER)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(modRole);
-                        break;
-                    default:
+                    }
+                    default -> {
                         Role userRole = roleRepository.findByAppRole(AppRole.USER)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(userRole);
+                    }
                 }
             });
         }
