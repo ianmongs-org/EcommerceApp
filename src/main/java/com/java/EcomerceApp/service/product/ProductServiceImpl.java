@@ -34,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
     private final FileService fileService;
     @Value("${project.image}")
     private String path;
-    @Value("${servelet.multipart.max-file-size}")
+    @Value("${spring.servlet.multipart.max-file-size}")
     private String maxFileSize;
 
     @Override
