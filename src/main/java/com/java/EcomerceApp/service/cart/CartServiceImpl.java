@@ -1,5 +1,6 @@
 package com.java.EcomerceApp.service.cart;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -19,6 +20,7 @@ import com.java.EcomerceApp.repository.CartItemRepository;
 import com.java.EcomerceApp.repository.CartRepository;
 import com.java.EcomerceApp.repository.ProductRepository;
 import com.java.EcomerceApp.security.utils.AuthUtil;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -74,19 +76,7 @@ public class CartServiceImpl implements CartService {
         cart.setTotalPrice(cart.getTotalPrice() + (product.getSpecialPrice() * quantity));
         cartRepository.save(cart);
 
-        CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
-        List<CartItem> cartItems = cart.getCartItems();
-
-        List<ProductDTO> productDTOList = cartItems.stream().map(item -> {
-            ProductDTO productDTO = modelMapper.map(item.getProduct(), ProductDTO.class);
-            productDTO.setQuantity(item.getQuantity());
-            productDTO.setDiscount(item.getDiscount());
-            productDTO.setPrice(item.getProductPrice());
-            return productDTO;
-        }).collect(Collectors.toList());
-
-        cartDTO.setProducts(productDTOList);
-        return cartDTO;
+        return getCartDTO(cart);
     }
 
     private Cart createCart() {
@@ -106,6 +96,10 @@ public class CartServiceImpl implements CartService {
         if (cart == null) {
             throw new ResourceNotFoundException("Cart is empty");
         }
+        return getCartDTO(cart);
+    }
+
+    private CartDTO getCartDTO(Cart cart) {
         CartDTO cartDTO = modelMapper.map(cart, CartDTO.class);
         List<CartItem> cartItems = cart.getCartItems();
         List<ProductDTO> productDTOList = cartItems.stream().map(item -> {
@@ -117,5 +111,11 @@ public class CartServiceImpl implements CartService {
         }).collect(Collectors.toList());
         cartDTO.setProducts(productDTOList);
         return cartDTO;
+    }
+    @Transactional
+    public void clearCart(Cart cart) {
+        cart.clearCartItems();
+        cart.setTotalPrice(0.0);
+        cartRepository.save(cart);
     }
 }
