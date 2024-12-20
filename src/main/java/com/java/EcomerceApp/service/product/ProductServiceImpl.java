@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.java.EcomerceApp.exception.DuplicateResourceException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -41,17 +42,16 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO addProduct(ProductDTO productDTO, Long categoryId) {
         // Check if a product with the same name already exists
         if (productRepository.existsByProductName(productDTO.getProductName())) {
-            throw new ResourceNotFoundException("Product with name: " + productDTO.getProductName() + " already exists");
+            throw new DuplicateResourceException("Product with name: " + productDTO.getProductName() + " already exists");
         }
         //find the category by id
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryId));
-
         //map the productDTO to product
         Product product = modelMapper.map(productDTO, Product.class);
         product.setCategory(category);
         //set the special price
-        Double specialPrice = product.getPrice() - (product.getPrice() * product.getDiscount() * 0.01);
+        Double specialPrice = calculateSpecialPrice(product.getPrice(), product.getDiscount());
         product.setSpecialPrice(specialPrice);
         //save the product then map to productDTO
         Product savedProduct = productRepository.save(product);
@@ -59,6 +59,9 @@ public class ProductServiceImpl implements ProductService {
         return modelMapper.map(savedProduct, ProductDTO.class);
     }
 
+    private Double calculateSpecialPrice(Double price, Double discount) {
+        return price - (price * discount * 0.01);
+    }
     @Override
     public ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
         Sort sort = sortOrder.equalsIgnoreCase("asc")
@@ -150,10 +153,8 @@ public class ProductServiceImpl implements ProductService {
         // Find the product by id
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + productId));
-
         // Delete the product
         productRepository.delete(product);
-
         return "Product deleted successfully";
     }
 
@@ -170,7 +171,6 @@ public class ProductServiceImpl implements ProductService {
         String fileName = fileService.uploadImage(path, image);
         //update the file to the product
         productFromDb.setImage(fileName);
-
         //save
         Product savedProduct = productRepository.save(productFromDb);
         return modelMapper.map(savedProduct, ProductDTO.class);
