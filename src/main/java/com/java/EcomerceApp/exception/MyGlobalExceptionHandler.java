@@ -36,7 +36,10 @@ public class MyGlobalExceptionHandler {
         APIResponse apiResponse = new APIResponse(message, false);
         return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
     }
-
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<String> handleDuplicateResourceException(DuplicateResourceException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+    }
     // @ExceptionHandler(ConstraintViolationException.class)
     // public ResponseEntity<Map<String, String>> handleConstraintViolationException(ConstraintViolationException e) {
 
