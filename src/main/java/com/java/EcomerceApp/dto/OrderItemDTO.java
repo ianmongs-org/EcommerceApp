@@ -12,5 +12,7 @@ public class OrderItemDTO {
     private Integer quantity;
     private Double productPrice;
     private Double discount;
-    private ProductDTO product;
+    private Long productId;
+    private String productName;
+    private String productImage;
 }
