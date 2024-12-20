@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +26,7 @@ public class Payment {
     private String pgPaymentStatus;
     private String pgResponseMessage;
     private String pgName;
+    private Double amount;
 
     public Payment(String pgPaymentId, String paymentMethod, String pgPaymentStatus, String pgResponseMessage, String pgName) {
         this.pgPaymentId = pgPaymentId;
