@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Welcome to the **E-Commerce Application**, a robust online shopping platform built using **Spring Boot**. This project provides an end-to-end solution for managing products, customers, orders, payments, and shopping carts. It is designed to be scalable, modular, and customizable, integrating a wide range of typical e-commerce features.
+Welcome to the **E-Commerce Application**, built using **Spring Boot**. This project provides an end-to-end solution for managing products, customers, orders, payments, and shopping carts. It is designed to be scalable, modular, and customizable, integrating a wide range of typical e-commerce features.
 
 ### Key Features
 - **User Management**: Registration, login, role-based access, and profile management.
@@ -147,7 +147,7 @@ EcommerceApp/
 | DELETE      | `/api/carts/{itemId}`   | Remove item from cart     |
 
 ## Testing
-
+ **not done**
 - **Unit Tests**: For testing individual service methods.
 - **Integration Tests**: To test the interaction between layers (e.g., service and repository).
   
