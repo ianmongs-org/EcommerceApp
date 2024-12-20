@@ -3,7 +3,7 @@ package com.java.EcomerceApp.controller;
 import com.java.EcomerceApp.dto.OrderDTO;
 import com.java.EcomerceApp.dto.OrderRequestDTO;
 import com.java.EcomerceApp.security.utils.AuthUtil;
-import com.java.EcomerceApp.service.OrderService;
+import com.java.EcomerceApp.service.orders.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
