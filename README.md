@@ -5,12 +5,12 @@
 Welcome to the **E-Commerce Application**, built using **Spring Boot**. This project provides an end-to-end solution for managing products, customers, orders, payments, and shopping carts. It is designed to be scalable, modular, and customizable, integrating a wide range of typical e-commerce features.
 
 ### Key Features
-- **User Management**: Registration, login, role-based access, and profile management.
+- **User Management**: Registration, login, role-based access,and profile management.
 - **Product Management**: Add, update, delete, and categorize products.
 - **Order Management**: Place orders, track order status, view order history.
 - **Shopping Cart**: Add/remove items, view cart summary, update quantities.
 - **Payment Integration**: Secure payment processing with integrated gateways.
-- **Search and Filters**: Search for products by name, category, and price range.
+- **Search and Filters**: Search for products by name,category, and price range.
 - **Admin Panel**: A separate interface for admins to manage products, users, and orders.
 
 ## Project Structure
