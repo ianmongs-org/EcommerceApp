@@ -3,7 +3,6 @@ package com.java.EcomerceApp.service.orders;
 import com.java.EcomerceApp.dto.OrderDTO;
 import com.java.EcomerceApp.dto.OrderItemDTO;
 import com.java.EcomerceApp.dto.OrderRequestDTO;
-import com.java.EcomerceApp.dto.PaymentDTO;
 import com.java.EcomerceApp.exception.ResourceNotFoundException;
 import com.java.EcomerceApp.model.*;
 import com.java.EcomerceApp.repository.*;
