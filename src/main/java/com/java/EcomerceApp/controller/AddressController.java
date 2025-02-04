@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/addresses")
 @Tag(name = "Address", description = "Address management APIs")
 public class AddressController {
 
@@ -26,7 +26,7 @@ public class AddressController {
         this.addressService = addressService;
     }
 
-    @PostMapping("/address")
+    @PostMapping("/create")
     @Operation(summary = "Create a new address", description = "Create a new address for the logged-in user")
     public ResponseEntity<AddressDTO> createAddress(@Valid @RequestBody AddressDTO addressDTO) {
         User user = authUtil.loggedInUser();
@@ -34,21 +34,21 @@ public class AddressController {
         return new ResponseEntity<>(savedAddressDTO, HttpStatus.CREATED);
     }
 
-    @GetMapping("/addresses")
+    @GetMapping()
     @Operation(summary = "Get all addresses", description = "Retrieve all addresses")
     public ResponseEntity<List<AddressDTO>> getAddresses() {
         List<AddressDTO> addressDTOList = addressService.getAddress();
         return new ResponseEntity<>(addressDTOList, HttpStatus.OK);
     }
 
-    @GetMapping("/addresses/{addressId}")
+    @GetMapping("/{addressId}")
     @Operation(summary = "Get address by ID", description = "Retrieve an address by its ID")
     public ResponseEntity<AddressDTO> getAddressById(@PathVariable Long addressId) {
         AddressDTO addressDTO = addressService.getAddressById(addressId);
         return new ResponseEntity<>(addressDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/users/addresses")
+    @GetMapping("/users")
     @Operation(summary = "Get user addresses", description = "Retrieve all addresses for the logged-in user")
     public ResponseEntity<List<AddressDTO>> getUserAddresses() {
         User user = authUtil.loggedInUser();
@@ -56,7 +56,7 @@ public class AddressController {
         return new ResponseEntity<>(addressDTOs, HttpStatus.OK);
     }
 
-    @PutMapping("/addresses/{addressId}")
+    @PutMapping("/{addressId}")
     @Operation(summary = "Update address by ID", description = "Update an address by its ID")
     public ResponseEntity<AddressDTO> updateAddressById(@PathVariable Long addressId, @RequestBody AddressDTO addressDTO) {
         User user = authUtil.loggedInUser();
@@ -64,7 +64,7 @@ public class AddressController {
         return new ResponseEntity<>(updatedAddressDTO, HttpStatus.OK);
     }
 
-    @DeleteMapping("/addresses/{addressId}")
+    @DeleteMapping("/{addressId}")
     @Operation(summary = "Delete address by ID", description = "Delete an address by its ID")
     public ResponseEntity<String> deleteAddressById(@PathVariable Long addressId) {
         User user = authUtil.loggedInUser();

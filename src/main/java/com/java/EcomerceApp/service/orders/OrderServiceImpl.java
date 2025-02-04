@@ -103,6 +103,5 @@ public class OrderServiceImpl implements OrderService {
             orderItemDTO.setProductImage(orderItem.getProduct().getImage());
             return orderItemDTO;
         }).collect(Collectors.toList()));
-        return orderDTO;
-    }
+        return orderDTO;}
 }
