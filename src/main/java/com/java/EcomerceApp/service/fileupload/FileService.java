@@ -1,4 +1,4 @@
-package com.java.EcomerceApp.service;
+package com.java.EcomerceApp.service.fileupload;
 
 import org.springframework.web.multipart.MultipartFile;
 

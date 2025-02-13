@@ -1,4 +1,4 @@
-package com.java.EcomerceApp.service;
+package com.java.EcomerceApp.service.fileupload;
 
 import java.io.File;
 import java.io.IOException;
