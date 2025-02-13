@@ -1,13 +1,12 @@
 package com.java.EcomerceApp.dto;
 
 import com.java.EcomerceApp.model.Product;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartDTO {
