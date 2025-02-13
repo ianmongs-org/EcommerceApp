@@ -2,13 +2,13 @@ package com.java.EcomerceApp.model;
 
 import jakarta.persistence.*;
 import java.util.ArrayList;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
