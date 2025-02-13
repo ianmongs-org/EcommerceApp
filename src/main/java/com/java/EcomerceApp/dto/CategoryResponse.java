@@ -2,10 +2,10 @@ package com.java.EcomerceApp.dto;
 
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-@Data
+import lombok.*;
+
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryResponse {

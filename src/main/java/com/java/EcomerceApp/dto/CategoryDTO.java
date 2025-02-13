@@ -1,12 +1,11 @@
 package com.java.EcomerceApp.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Setter
+@Getter
 public class CategoryDTO {
     private Long categoryId;
     private String categoryName;
