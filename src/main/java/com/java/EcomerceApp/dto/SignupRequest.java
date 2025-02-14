@@ -5,8 +5,11 @@ import java.util.Set;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 public class SignupRequest {
     @NotBlank
     @Size(min = 3, max = 20)

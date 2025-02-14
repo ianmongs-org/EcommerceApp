@@ -1,13 +1,12 @@
 package com.java.EcomerceApp.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Setter
+@Getter
 public class UserInfoResponse {
     private Long id;
     private String jwtToken;
