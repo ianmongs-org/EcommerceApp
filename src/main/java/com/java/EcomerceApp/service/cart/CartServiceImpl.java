@@ -25,20 +25,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CartServiceImpl implements CartService {
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+    private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
+    private final ModelMapper modelMapper;
+    private final AuthUtil authUtil;
 
-    @Autowired
-    private CartRepository cartRepository;
-
-    @Autowired
-    private CartItemRepository cartItemRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
-
-    @Autowired
-    private AuthUtil authUtil;
+    public CartServiceImpl (ProductRepository productRepository, CartRepository cartRepository, CartItemRepository cartItemRepository, ModelMapper modelMapper,  AuthUtil authUtil){
+        this.productRepository = productRepository;
+        this.authUtil = authUtil;
+        this.cartRepository = cartRepository;
+        this.cartItemRepository = cartItemRepository;
+        this.modelMapper = modelMapper;
+    }
 
     @Override
     public CartDTO addProductToCart(Long productId, Integer quantity) {

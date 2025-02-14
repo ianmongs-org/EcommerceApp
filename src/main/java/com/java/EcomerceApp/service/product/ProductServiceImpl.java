@@ -21,7 +21,7 @@ import com.java.EcomerceApp.model.Category;
 import com.java.EcomerceApp.model.Product;
 import com.java.EcomerceApp.repository.CategoryRepository;
 import com.java.EcomerceApp.repository.ProductRepository;
-import com.java.EcomerceApp.service.FileService;
+import com.java.EcomerceApp.service.fileupload.FileService;
 
 import lombok.RequiredArgsConstructor;
 
