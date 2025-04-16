@@ -9,9 +9,9 @@ Welcome to the **E-Commerce Application**, built using **Spring Boot**. This pro
 - **Product Management**: Add, update, delete, and categorize products.
 - **Order Management**: Place orders, track order status, view order history.
 - **Shopping Cart**: Add/remove items, view cart summary, update quantities.
-- **Payment Integration**: Secure payment processing with integrated gateways.
+- **Payment Integration**: Secure payment processing with integrated gateways.(not yet)
 - **Search and Filters**: Search for products by name,category, and price range.
-- **Admin Panel**: A separate interface for admins to manage products, users, and orders.
+- **Admin Panel**: A separate interface for admins to manage products, users, and orders.(not yet)
 
 ## Project Structure
 
@@ -39,11 +39,11 @@ EcommerceApp/
 - **Backend Framework**: Spring Boot (Java)
 - **Database**: MySQL/PostgreSQL (JPA/Hibernate for ORM)
 - **Security**: Spring Security with JWT authentication
-- **Payment Integration**: Stripe/PayPal API
+- **Payment Integration**: Stripe/PayPal API (not yet)
 - **Frontend**: React/Angular (optional, not included in this repository)
 - **Build Tool**: Maven
 - **Testing**: JUnit, Mockito
-- **Containerization**: Docker (optional)
+- **Containerization**: Docker
 
 ## Requirements
 
