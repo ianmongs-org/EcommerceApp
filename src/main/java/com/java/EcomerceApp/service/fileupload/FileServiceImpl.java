@@ -8,10 +8,12 @@ import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@Profile({"dev", "default"})
 public class FileServiceImpl implements FileService{
     @Value("${project.image}")
     private String imageUploadDir;
@@ -49,5 +51,14 @@ public class FileServiceImpl implements FileService{
 
         // Return the generated file name
         return fileName;
+    }
+
+    public byte[] getImageData(String path) throws IOException {
+        File file = new File(path);
+        return Files.readAllBytes(file.toPath());
+    }
+    public void deleteImage(String path) throws IOException {
+        File file = new File(path);
+        Files.deleteIfExists(file.toPath());
     }
 }
