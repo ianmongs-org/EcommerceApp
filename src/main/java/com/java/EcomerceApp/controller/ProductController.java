@@ -35,7 +35,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Product", description = "Product management APIs")
 @RequiredArgsConstructor
 public class ProductController {
-    @Autowired
+
     private final ProductService productService;
 
     @PostMapping("/admin/category/{categoryId}/product")
