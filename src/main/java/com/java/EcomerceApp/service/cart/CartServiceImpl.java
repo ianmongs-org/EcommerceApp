@@ -111,6 +111,71 @@ public class CartServiceImpl implements CartService {
         cartDTO.setProducts(productDTOList);
         return cartDTO;
     }
+
+    @Override
+    public CartDTO removeProductFromCart(Long productId) {
+        Cart cart = cartRepository.findCartByUserEmail(authUtil.loggedInUserEmail());
+        if (cart == null) {
+            throw new ResourceNotFoundException("Cart not found");
+        }
+
+        CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cart.getCartId(), productId);
+        if (cartItem == null) {
+            throw new ResourceNotFoundException("Product not found in cart");
+        }
+
+        cart.getCartItems().remove(cartItem);
+        cart.setTotalPrice(cart.getTotalPrice() - (cartItem.getProductPrice() * cartItem.getQuantity()));
+        cartItemRepository.delete(cartItem);
+        cartRepository.save(cart);
+
+        return getCartDTO(cart);
+    }
+
+    @Override
+    public CartDTO updateProductQuantity(Long productId, Integer quantity) {
+        if (quantity <= 0) {
+            throw new APIException("Quantity must be greater than zero");
+        }
+
+        Cart cart = cartRepository.findCartByUserEmail(authUtil.loggedInUserEmail());
+        if (cart == null) {
+            throw new ResourceNotFoundException("Cart not found");
+        }
+
+        CartItem cartItem = cartItemRepository.findByCartIdAndProductId(cart.getCartId(), productId);
+        if (cartItem == null) {
+            throw new ResourceNotFoundException("Product not found in cart");
+        }
+
+        Product product = cartItem.getProduct();
+        if (product.getQuantity() < quantity) {
+            throw new APIException("Product " + product.getProductName() + " is not available in the required quantity");
+        }
+
+        // Adjust the cart total based on the quantity change
+        double oldTotal = cartItem.getProductPrice() * cartItem.getQuantity();
+        double newTotal = cartItem.getProductPrice() * quantity;
+        cart.setTotalPrice(cart.getTotalPrice() - oldTotal + newTotal);
+
+        cartItem.setQuantity(quantity);
+        cartItemRepository.save(cartItem);
+        cartRepository.save(cart);
+
+        return getCartDTO(cart);
+    }
+
+    @Override
+    @Transactional
+    public void clearCart() {
+        Cart cart = cartRepository.findCartByUserEmail(authUtil.loggedInUserEmail());
+        if (cart == null) {
+            throw new ResourceNotFoundException("Cart not found");
+        }
+        
+        clearCart(cart);
+    }
+
     @Transactional
     public void clearCart(Cart cart) {
         cart.clearCartItems();
