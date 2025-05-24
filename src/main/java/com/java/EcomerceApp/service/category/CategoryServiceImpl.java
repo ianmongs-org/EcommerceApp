@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -27,9 +28,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
-        Sort sort = sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name())
-             ? Sort.by(sortBy).ascending() 
-             : Sort.by(sortBy).descending();
+        Sort sort = sortOrder.equalsIgnoreCase("asc") ?
+                Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         //represents the request of the specific page
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         Page<Category> categoryPage = categoryRepository.findAll(pageable);
@@ -41,14 +41,14 @@ public class CategoryServiceImpl implements CategoryService {
         //map every category to a response using stream
         List<CategoryDTO> categoryDTOS = categories.stream()
                 .map(category -> modelMapper.map(category, CategoryDTO.class))
-                .toList();
+                .collect(Collectors.toList());
         CategoryResponse categoryResponse = new CategoryResponse();
         categoryResponse.setCategories(categoryDTOS);
         categoryResponse.setTotalPages(categoryPage.getTotalPages());
         categoryResponse.setTotalElements(categoryPage.getTotalElements());
         categoryResponse.setPageSize(categoryPage.getSize());
         categoryResponse.setPageNumber(categoryPage.getNumber());
-        categoryResponse.setLastPage(categoryPage.isLast());
+        categoryResponse.setLast(categoryPage.isLast());
         return categoryResponse;
     }
 
