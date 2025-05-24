@@ -5,26 +5,25 @@ import com.java.EcomerceApp.model.Role;
 import com.java.EcomerceApp.model.User;
 import com.java.EcomerceApp.repository.RoleRepository;
 import com.java.EcomerceApp.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.boot.CommandLineRunner;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Configuration
+@Profile("dev")
+@RequiredArgsConstructor
 public class DataInitializer {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Bean
     public CommandLineRunner initData(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
