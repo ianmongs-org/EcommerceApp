@@ -18,6 +18,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -52,40 +58,43 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://127.0.0.1:3000"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
+        configuration.setExposedHeaders(List.of("x-auth-token"));
+        configuration.setAllowCredentials(true);
+        
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        
+        return source;
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth
-                                .requestMatchers("api/auth/**").permitAll()
-                                .requestMatchers("/api/v1/auth/**",
-                                 "/v2/api-docs",
-                                 "/v3/api-docs",
-                                 "/v3/api-docs/**",
-                                 "/swagger-resources",
-                                 "/swagger-resources/**",
-                                 "/configuration/ui",
-                                 "/configuration/security",
-                                 "/swagger-ui/**",
-                                 "/webjars/**",
-                                 "/swagger-ui.html").permitAll()
+                        auth.requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/api/test/**").permitAll()
+                                .requestMatchers("/api/products/**").permitAll()
+                                .requestMatchers("/api/categories/**").permitAll()
+                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                                 .requestMatchers("/h2-console/**").permitAll()
-                                .requestMatchers("api/public/**").permitAll()
-                                .requestMatchers("api/test/**").permitAll()
-                                .requestMatchers("/images/**").permitAll()
                                 .anyRequest().authenticated()
                 );
+        
+        // Disable frame options for H2 console
+        http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
+
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
+        
         return http.build();
     }
 
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        return (web) -> web.ignoring().requestMatchers("/v3/api-docs/**", "/swagger-ui/**",
-//                "/swagger-ui.html", "/configuration/ui",
-//                "/configuration/security", "/webjars/**");
-//    }
 }
